@@ -1,5 +1,5 @@
 #include "pano_core/ImageAtom.h"
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 #include "pano_core/feature_utils.h"

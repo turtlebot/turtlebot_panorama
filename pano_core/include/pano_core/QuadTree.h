@@ -1,7 +1,7 @@
 //#ifndef PANO_QUADTREE_H_
 //#define PANO_QUADTREE_H_
 //
-//#include <opencv2/core/core.hpp>
+//#include <opencv2/core.hpp>
 //#include <vector>
 //
 //namespace pano

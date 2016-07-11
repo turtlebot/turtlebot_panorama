@@ -1,7 +1,7 @@
 #ifndef PANO_INTERFACES_H_H
 #define PANO_INTERFACES_H_H
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 
 namespace pano{
 

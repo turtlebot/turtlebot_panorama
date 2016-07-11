@@ -10,8 +10,8 @@
 
 #include "pano_core/pano_interfaces.h"
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/calib3d.hpp>
 #include <vector>
 namespace pano
 {

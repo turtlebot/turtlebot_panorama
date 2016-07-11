@@ -7,7 +7,7 @@
 
 #ifndef IMAGEMOLECULE_H_
 #define IMAGEMOLECULE_H_
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <string>
 #include <vector>
 #include <list>

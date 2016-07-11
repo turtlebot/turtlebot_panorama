@@ -8,7 +8,7 @@
 #ifndef IMAGES_H_
 #define IMAGES_H_
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <string>
 
 #include <pano_core/pano_interfaces.h>

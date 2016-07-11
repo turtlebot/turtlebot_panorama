@@ -1,6 +1,6 @@
 #include "pano_core/Blender.h"
 #include "pano_core/Projector.h"
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 #include "pano_core/panoutils.h"

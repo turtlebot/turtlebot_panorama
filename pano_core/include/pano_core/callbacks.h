@@ -9,7 +9,7 @@
 #define PANO_CALLBACKS_H_
 
 #include <map>
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 
 namespace pano{
 struct Callback{

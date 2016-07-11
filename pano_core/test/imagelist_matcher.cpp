@@ -6,7 +6,7 @@
 #include "pano_core/Blender.h"
 #include "pano_core/panoutils.h"
 #include <sstream>
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <iostream>
 #include <list>
 

@@ -7,7 +7,7 @@
 
 #ifndef PANO_PY_OPENCV_H_
 #define PANO_PY_OPENCV_H_
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <boost/python.hpp>
 namespace pano_py{
 /** \brief takes a cv.cvmat or cv.iplimage from the opencv wrappings and turns it into

@@ -1,7 +1,7 @@
 #include "pano_core/Projector.h"
 #include "pano_core/Camera.h"
 #include <cmath>
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <iostream>
 #include <vector>
 

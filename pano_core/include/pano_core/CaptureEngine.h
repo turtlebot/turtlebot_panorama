@@ -12,7 +12,7 @@
 #include "pano_core/Camera.h"
 #include "pano_core/MoleculeProcessor.h"
 
-#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/features2d.hpp"
 #include "pano_core/callbacks.h"
 
 namespace pano

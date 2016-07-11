@@ -1,7 +1,8 @@
 #include <pano_core/Features.h>
 #include <pano_core/feature_utils.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 using namespace cv;
 namespace pano
@@ -47,7 +48,7 @@ void Features::deserialize(const cv::FileNode& fn)
 
 }
 void drawMatchesRelative(const Features& train, const Features& query, const std::vector<cv::DMatch>& matches,
-                         Mat& img, const vector<unsigned char>& mask)
+                         Mat& img, const std::vector<unsigned char>& mask)
 {
   for (int i = 0; i < (int)matches.size(); i++)
   {

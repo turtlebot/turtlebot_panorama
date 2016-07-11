@@ -8,8 +8,8 @@
 #ifndef PANO_FEATURES_H_
 #define PANO_FEATURES_H_
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/features2d/features2d.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/features2d.hpp>
 
 #include <pano_core/pano_interfaces.h>
 

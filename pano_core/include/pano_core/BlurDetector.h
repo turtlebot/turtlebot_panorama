@@ -8,7 +8,7 @@
 #ifndef BLURDETECTOR_H_
 #define BLURDETECTOR_H_
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 
 namespace pano
 {

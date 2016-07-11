@@ -8,8 +8,8 @@
 #include "pano_core/CaptureEngine.h"
 #include "pano_core/panoutils.h"
 
-#include <opencv2/highgui/highgui.hpp>
-#include<opencv2/legacy/legacy.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/legacy.hpp>
 
 using namespace cv;
 using namespace std;

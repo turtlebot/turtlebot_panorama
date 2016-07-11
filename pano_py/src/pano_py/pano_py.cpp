@@ -1,7 +1,7 @@
 #include <pano_py/pano_py.h>
 
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 
 #include <pano_core/pano_core.h>
 #include <pano_py/opencv.h>

@@ -8,7 +8,7 @@
 #include "pano_core/Camera.h"
 #include <pano_core/ModelFitter.h>
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

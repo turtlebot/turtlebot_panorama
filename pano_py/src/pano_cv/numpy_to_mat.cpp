@@ -3,7 +3,7 @@
 #include <complex>
 #include <algorithm>
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
 #include <pano_py/opencv.h>
 
 using namespace cv;
