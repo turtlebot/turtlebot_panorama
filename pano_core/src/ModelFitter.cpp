@@ -110,7 +110,7 @@ void FitterResult::deserialize(const cv::FileNode& node)
   names_.resize(names.size());
   for (size_t i = 0; i < names.size(); i++)
   {
-    names_[i] = (string)names[i];
+    names_[i] = (std::string)names[i];
   }
   empty_ = (int)node["empty"];
   success_ = (int)node["success"];
@@ -138,7 +138,7 @@ AtomPair::AtomPair(const cv::Ptr<ImageAtom>& atom1, const cv::Ptr<ImageAtom>& at
   points2fto3f(pts2_->begin(), pts2_->end(), rays2_->begin(), atom2_->camera().Kinv());
 }
 AtomPair::AtomPair(const Ptr<ImageAtom>& atom1, const Ptr<ImageAtom>& atom2, const std::vector<cv::DMatch>& matches) :
-  atom1_(atom1), atom2_(atom2), matches_(new vector<DMatch> (matches)), result_(new FitterResult()),
+  atom1_(atom1), atom2_(atom2), matches_(new std::vector<DMatch> (matches)), result_(new FitterResult()),
       pts1_(new std::vector<cv::Point2f>()), pts2_(new std::vector<cv::Point2f>()),
       rays1_(new std::vector<cv::Point3f>()), rays2_(new std::vector<cv::Point3f>())
 {
@@ -259,7 +259,7 @@ float calcError(const std::vector<Point3f>& pts1, const std::vector<Point3f>& pt
 
 }
 
-float calcReprojectonError(const vector<Point2f>& pts1, const vector<Point2f>& pts2, const std::vector<uchar> & mask,
+float calcReprojectonError(const std::vector<Point2f>& pts1, const std::vector<Point2f>& pts2, const std::vector<uchar> & mask,
                            const cv::Mat& R, const cv::Mat& _K, int norm_type)
 {
   calcErr_ptr erf_ptr;
@@ -353,8 +353,8 @@ void ModelFitter::fit(AtomPair& pair)
   fit_impl(pair);
 }
 
-const string FitPair::VERBOSE = "FitPair::VERBOSE";
-const string FitPair::UBER_VERBOSE = "FitPair::UBER_VERBOSE";
+const std::string FitPair::VERBOSE = "FitPair::VERBOSE";
+const std::string FitPair::UBER_VERBOSE = "FitPair::UBER_VERBOSE";
 
 FitPair::FitPair(cv::Ptr<ModelFitter> fitter, int fail_limit, cv::Ptr<std::list<AtomPair> > good_pairs,
                  CallbackEngine*cbengine) :

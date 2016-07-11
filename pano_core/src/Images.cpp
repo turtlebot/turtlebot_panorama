@@ -100,8 +100,8 @@ void Images::serialize(cv::FileStorage& fs) const
 }
 void Images::deserialize(const cv::FileNode& fn)
 {
-  fname_ = (string)fn["fname"];
-  path_ = (string)fn["path"];
+  fname_ = (std::string)fn["fname"];
+  path_ = (std::string)fn["path"];
   ondisk_ = (int)fn["ondisk"];
   persist_img_ = (int)fn["persist"];
   if (ondisk_)
@@ -112,7 +112,7 @@ void Images::deserialize(const cv::FileNode& fn)
 // cv::Rect getEncompassingRect() const;
 cv::Mat HugeImage::loadAll() const
 {
-  map<int, string>::const_iterator nit = names_.begin();
+  map<int, std::string>::const_iterator nit = names_.begin();
   map<int, Rect>::const_iterator rit = rois_.begin();
   Mat image = Mat::zeros(size_, CV_8UC3);
   for (; nit != names_.end(), rit != rois_.end(); ++nit, ++rit)
@@ -127,7 +127,7 @@ void HugeImage::serialize(const std::string& name) const
 {
   FileStorage fs(name, FileStorage::WRITE);
   fs << "big_image" << "[";
-  map<int, string>::const_iterator nit = names_.begin();
+  map<int, std::string>::const_iterator nit = names_.begin();
   map<int, Rect>::const_iterator rit = rois_.begin();
   for (; nit != names_.end(), rit != rois_.end(); ++nit, ++rit)
   {
