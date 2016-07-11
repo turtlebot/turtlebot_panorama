@@ -57,7 +57,7 @@ Mat svdsolve(const cv::Mat& correlation)
   return svd.u * diagm * svd.vt;
 }
 
-Mat svdcorrelation(const vector<Point3f>& pts1, const vector<Point3f>& pts2, const vector<uchar>& mask)
+Mat svdcorrelation(const std::vector<Point3f>& pts1, const std::vector<Point3f>& pts2, const std::vector<uchar>& mask)
 {
   cv::Mat r1 = cv::Mat(3, 1, CV_32F);
   cv::Mat r2 = cv::Mat(3, 1, CV_32F);
@@ -79,12 +79,12 @@ Mat svdcorrelation(const vector<Point3f>& pts1, const vector<Point3f>& pts2, con
   return correlation;
 }
 
-Mat svdsolve(const vector<Point3f>& pts1, const vector<Point3f>& pts2, const vector<uchar>& mask)
+Mat svdsolve(const std::vector<Point3f>& pts1, const std::vector<Point3f>& pts2, const std::vector<uchar>& mask)
 {
   return svdsolve(svdcorrelation(pts1, pts2, mask));
 }
 
-Mat svdsolve(const vector<Point2f>& pts1, const vector<Point2f>& pts2, const vector<uchar>& mask, const Mat& K)
+Mat svdsolve(const std::vector<Point2f>& pts1, const std::vector<Point2f>& pts2, const std::vector<uchar>& mask, const Mat& K)
 {
   // form the estimate covariance matrix from data points, sum( x x' )
   cv::Mat correlation = cv::Mat::zeros(3, 3, cv::DataType<float>::type);
@@ -120,34 +120,34 @@ struct NextNum
   }
 };
 
-void ransacSolveR(const vector<Point3f>& pts1, const vector<Point3f>& pts2, FitterResult& result, int maxiters,
+void ransacSolveR(const std::vector<Point3f>& pts1, const std::vector<Point3f>& pts2, FitterResult& result, int maxiters,
                   int inliers_thresh, int nNeeded, double error_thresh, cv::Mat K, cv::Mat Kinv)
 {
   float bestdist = 1e8;
   int bestinliers = 0;
   if (pts1.empty() || pts1.size() < size_t(inliers_thresh))
   {
-    result = FitterResult(FitterResult::GenerateStdMats(), false, bestdist, error_thresh, vector<uchar> (), 0);
+    result = FitterResult(FitterResult::GenerateStdMats(), false, bestdist, error_thresh, std::vector<uchar> (), 0);
     return;
   }
 
   int iters = 0;
 
-  vector<uchar> _best(pts1.size()), _mask(pts1.size());
+  std::vector<uchar> _best(pts1.size()), _mask(pts1.size());
 
-  vector<uchar> * best = &_best;
-  vector<uchar> * mask = &_mask;
+  std::vector<uchar> * best = &_best;
+  std::vector<uchar> * mask = &_mask;
 
   Mat bestR = Mat::eye(3, 3, DataType<float>::type);
 
-  vector<Point3f> rpts1(nNeeded);
-  vector<Point3f> rpts2(nNeeded);
+  std::vector<Point3f> rpts1(nNeeded);
+  std::vector<Point3f> rpts2(nNeeded);
 
   int ntotal = pts1.size();
   ;
   Mat R = cv::Mat::eye(3, 3, CV_32F);
 
-  vector<int> idxs(pts1.size());
+  std::vector<int> idxs(pts1.size());
   generate(idxs.begin(), idxs.end(), NextNum());
 //  {
 //    Mat idxs_m(idxs);
@@ -197,7 +197,7 @@ void ransacSolveR(const vector<Point3f>& pts1, const vector<Point3f>& pts2, Fitt
     }
 
     // fit TM to current inlier set via solver
-    R = svdsolve(rpts1, rpts2, vector<uchar> ());
+    R = svdsolve(rpts1, rpts2, std::vector<uchar> ());
 
     std::fill(mask->begin(), mask->end(), 0);
     // for every point in the set, compute error per point
@@ -220,7 +220,7 @@ void ransacSolveR(const vector<Point3f>& pts1, const vector<Point3f>& pts2, Fitt
       if (cur_dist <= bestdist)
       {
         bestinliers = numinliers;
-        vector<uchar> * temp = best;
+        std::vector<uchar> * temp = best;
         best = mask;
         mask = temp;
         bestR = tR;
@@ -240,7 +240,7 @@ void ransacSolveR(const vector<Point3f>& pts1, const vector<Point3f>& pts2, Fitt
   cv::Rodrigues(bestR, omega_);
   int good = bestinliers >= inliers_thresh;
   good = good * (bestdist < error_thresh);
-  vector<Mat> mats = FitterResult::GenerateStdMats();
+  std::vector<Mat> mats = FitterResult::GenerateStdMats();
 
   mats[FitterResult::R] = bestR;
   mats[FitterResult::W_HAT] = omega_;
@@ -249,28 +249,28 @@ void ransacSolveR(const vector<Point3f>& pts1, const vector<Point3f>& pts2, Fitt
 
 }
 
-void svdSolveR(const vector<Point3f>& rays1, const vector<Point3f>& rays2, FitterResult& result, int maxiters,
+void svdSolveR(const std::vector<Point3f>& rays1, const std::vector<Point3f>& rays2, FitterResult& result, int maxiters,
                int inliers_thresh, int nNeeded, double error_thresh, cv::Mat K, cv::Mat Kinv)
 {
 
   // fit TM to current inlier set via solver
-  Mat R = svdsolve(rays1, rays2, vector<uchar> ());
+  Mat R = svdsolve(rays1, rays2, std::vector<uchar> ());
   cv::Mat omega_(3, 1, CV_32F);
   cv::Rodrigues(R, omega_);
-  vector<Mat> mats = FitterResult::GenerateStdMats();
+  std::vector<Mat> mats = FitterResult::GenerateStdMats();
 
   mats[FitterResult::R] = R;
   mats[FitterResult::W_HAT] = omega_;
 
-  result = FitterResult(mats, true, 1.0, error_thresh, vector<uchar> (1,rays1.size()), rays1.size());
+  result = FitterResult(mats, true, 1.0, error_thresh, std::vector<uchar> (1,rays1.size()), rays1.size());
 
 }
 
-void ransacSolveR(const vector<Point2f>& _pts1, const vector<Point2f>& _pts2, FitterResult& result, int maxiters,
+void ransacSolveR(const std::vector<Point2f>& _pts1, const std::vector<Point2f>& _pts2, FitterResult& result, int maxiters,
                int inliers_thresh, int nNeeded, double error_thresh, cv::Mat K, cv::Mat Kinv)
 {
 
-  vector<Point3f> m_pts1, m_pts2;
+  std::vector<Point3f> m_pts1, m_pts2;
   m_pts1.resize(_pts1.size());
   m_pts2.resize(_pts2.size());
   points2fto3f(_pts1.begin(), _pts1.end(), m_pts1.begin(), Kinv);

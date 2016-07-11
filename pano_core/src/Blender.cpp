@@ -34,7 +34,7 @@ void initAlphaMat(const Size& sz, Mat& alpha, int feather_width)
   {
     alpha = Mat::zeros(sz, CV_8UC3);
   }
-  vector<uchar> _feather(feather_width);
+  std::vector<uchar> _feather(feather_width);
   for (int i = 0; i < feather_width; i++)
   {
     _feather[i] = 1 + 254 * sin(i * CV_PI / (2 * feather_width));
