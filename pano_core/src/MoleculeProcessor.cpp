@@ -143,7 +143,7 @@ void DijkstraWay(ImageMolecule& mol)
     float minnext = INFINITY;
     node.node_data.visited = true;
     Q.erase(current);
-    current = NULL;
+    current = cv::Ptr<ImageAtom>();
     for (set<Ptr<ImageAtom> >::iterator it = Q.begin(); it != Q.end(); ++it)
     {
       if (minnext > dijkstra_node_map[*it].node_data.distance)
@@ -206,7 +206,7 @@ cv::Ptr<ImageAtom> MoleculeGlob::minDistAtom(const ImageAtom& atom) const
   float min_dist = CV_PI * 2;
 
   if (!atom.extrinsics().flag(Extrinsics::ESTIMATED))
-    return NULL;
+    return cv::Ptr<ImageMolecule>();
 
   Ptr<ImageAtom> min_atom;
 
@@ -533,7 +533,7 @@ cv::Ptr<ImageMolecule> MoleculeGlob::getBiggestMolecule() const
 {
 
   if (molecules.empty())
-    return NULL;
+    return cv::Ptr<ImageMolecule>();
   cv::Ptr<ImageMolecule> biggest;
 
   std::set<cv::Ptr<ImageMolecule> >::iterator it = molecules.begin();

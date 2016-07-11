@@ -289,7 +289,7 @@ Ptr<ImageAtom> ImageMolecule::getMaximallyConnectedAtom(int node_offset) const
     return (node_connections[node_offset]).second;
   }
   else
-    return NULL;
+    return Ptr<ImageAtom>();
 
 }
 
