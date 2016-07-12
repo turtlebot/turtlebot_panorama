@@ -88,43 +88,22 @@ private:
   ros::NodeHandle nh;
   ros::NodeHandle priv_nh;
   std::map<std::string, std::string> params;
-  std_msgs::Empty empty_msg;
+
   geometry_msgs::Twist cmd_vel, zero_cmd_vel;
   double snap_interval;
   double angle, last_angle, given_angle, ang_vel_cur;
-  // panorama creation mode (continuously rotating while taking snapshots or rotate, stop, snapshot, rotate, ...)
+
   bool continuous;
 
-  // public API
-  // Service for starting the creation of a panorama picture
-  ros::ServiceServer srv_start_pano;
-  // Subscriber for starting the creation of a panorama picture
-  ros::Subscriber sub_start_pano;
-  // Subscriber for stopping the creation of a panorama picture
-  ros::Subscriber sub_stop_pano;
-  // Sends out the result of the stitched panorama picture
   image_transport::Publisher pub_stitched;
   image_transport::Subscriber sub_camera;
 
-  // worker functions
-  // for extra logging out via a ROS topic
-  ros::Publisher pub_log;
+  ros::ServiceServer srv_start_pano;
+
   // for turning the robot
   ros::Publisher pub_cmd_vel;
   // for retrieving the odometry of robot
   ros::Subscriber sub_odom;
-
-  // pano_ros API
-  // client for the pano_ros action server (does the actual work)
-  actionlib::SimpleActionClient<pano_ros::PanoCaptureAction>* pano_ros_client;
-  // trigger snapshot taking by pano_ros
-  ros::Publisher pub_action_snap;
-  /**
-   * for stop the pano_ros action goal; triggers the stitching of the gathered snapshots
-   */
-  ros::Publisher pub_action_stop;
-  // recevices the stitched image from pano_ros
-  image_transport::Subscriber sub_stitched;
 
   std::vector<cv::Mat> images_;
 
@@ -165,74 +144,15 @@ private:
   bool takePanoServiceCb(turtlebot_msgs::TakePanorama::Request& request,
                          turtlebot_msgs::TakePanorama::Response& response);
 
-  /**
-   * Simple way of taking a panorama picture (uses default values)
-   * @param msg empty message
-   */
-  void takePanoCb(const std_msgs::EmptyConstPtr& msg);
-
-  /**
-   * Stops the panorama creation
-   * @param msg empty message
-   */
-  void stopPanoCb(const std_msgs::EmptyConstPtr& msg);
-
-  /**
-   * Takes a snapshot
-   */
   void snap();
 
-  /**
-   * Rotates the robot
-   */
   void rotate();
 
-  /**
-   * Checks, if the robot has turned the specified angle interval
-   */
   bool hasReachedAngle();
 
-  /**
-   * Processes the robot's odometry data
-   * @param msg odometry data
-   */
   void odomCb(const nav_msgs::OdometryConstPtr& msg);
 
-  /**
-   * Sends an action to goal the pano_ros action server for taking snapshots and stitching them together
-   */
   void startPanoAction();
-
-  /**
-   * Stops the taking snapshots and triggers the stitching
-   */
-  void stopPanoAction();
-  // Note: pano_ros throws an error, when it hasn't taken a snapshot yet.
-  // TODO: Try to find a way to check, when stitching is possible and when the action goal needs to be cancelled.
-
-  /**
-   * Triggered when the pano_ros action goal went active
-   */
-  void activeCb();
-
-  /**
-   * Triggered while the pano_ros server is gathering snapshots
-   * @param feedback
-   */
-  void feedbackCb(const pano_ros::PanoCaptureFeedbackConstPtr& feedback);
-
-  /**
-   * Triggered when the pano_ros action goal has finished
-   * @param stateSNAPANDROTATE
-   * @param result
-   */
-  void doneCb(const actionlib::SimpleClientGoalState& state, const pano_ros::PanoCaptureResultConstPtr& result);
-
-  /**
-   * Receives the stitched panorama picture
-   * @param msg stiched image
-   */
-  void stitchedImageCb(const sensor_msgs::ImageConstPtr& msg);
 
   void cameraImageCb(const sensor_msgs::ImageConstPtr& msg);
 };
