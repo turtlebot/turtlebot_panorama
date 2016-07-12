@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Yujin Robot.
+ * Copyright (c) 2016, Yujin Robot, Rohan Agrawal
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
  *
  * @date 08/01/2013
  *
- * @author Younghun Ju, Jihoon Lee and Marcus Liebhardt
+ * @author Younghun Ju, Jihoon Lee, Marcus Liebhardt and Rohan Agrawal
  **/
 
 #include <cmath>
@@ -110,20 +110,19 @@ void PanoApp::spin()
 
         pub_cmd_vel.publish(zero_cmd_vel);
 
-        ROS_ERROR("got %d images", images_.size());
+        ROS_INFO("Stiching %d images", images_.size());
 
         cv::Mat pano;
         cv::Stitcher stitcher = cv::Stitcher::createDefault(false);
         cv::Stitcher::Status status = stitcher.stitch(images_, pano);
-        log("stiched");
+        log("Finished Stiching");
 
         cv_bridge::CvImage cv_img;
-        log("made cv_img");
         cv_img.image = pano;
-        log("panao");
         cv_img.encoding = "bgr8";
         cv_img.header.stamp = ros::Time::now();
         pub_stitched.publish(cv_img.toImageMsg());
+        log("Publishing Completed Panorama")
         // imwrite("pano.jpg", pano);
         is_active = false;
       }
