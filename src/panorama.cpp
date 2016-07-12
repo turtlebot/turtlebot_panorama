@@ -122,7 +122,7 @@ void PanoApp::spin()
         cv_img.encoding = "bgr8";
         cv_img.header.stamp = ros::Time::now();
         pub_stitched.publish(cv_img.toImageMsg());
-        log("Publishing Completed Panorama")
+        log("Publishing Completed Panorama");
         // imwrite("pano.jpg", pano);
         is_active = false;
       }
