@@ -42,6 +42,8 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Geometry>
 #include <turtlebot_panorama/panorama.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
 
 namespace turtlebot_panorama
 {
@@ -76,6 +78,8 @@ void PanoApp::init()
   sub_stop_pano = priv_nh.subscribe("stop_pano", 1, &PanoApp::stopPanoCb, this);
   image_transport::ImageTransport it_priv(priv_nh);
   pub_stitched = it_priv.advertise("panorama", 1, true);
+  image_transport::ImageTransport it(nh);
+  sub_camera = it.subscribe("/camera/rgb/image_raw", 1, &PanoApp::cameraImageCb, this);
 
   //***************************
   // Robot control
@@ -88,7 +92,7 @@ void PanoApp::init()
   //***************************
   pano_ros_client = new actionlib::SimpleActionClient<pano_ros::PanoCaptureAction>("pano_server", true);
   log("Waiting for Pano ROS server ...");
-  pano_ros_client->waitForServer(); // will wait for infinite time
+  // pano_ros_client->waitForServer(); // will wait for infinite time
   log("Connected to Pano ROS server.");
   pub_action_snap = nh.advertise<std_msgs::Empty>("pano_server/snap", 100);
   pub_action_stop = nh.advertise<std_msgs::Empty>("pano_server/stop", 100);
@@ -125,9 +129,24 @@ void PanoApp::spin()
       if ((given_angle - angle) <= 0.0174) // check, if target angle is reached (< 1 degree)
       {
         snap();
+        ros::Duration(2.0).sleep(); // give the pano server some time to retrieve the last pciture
+
         pub_cmd_vel.publish(zero_cmd_vel);
-        ros::Duration(1.0).sleep(); // give the pano server some time to retrieve the last pciture
+
         stopPanoAction();
+        cv::Mat pano;
+        cv::Stitcher stitcher = cv::Stitcher::createDefault(false);
+        cv::Stitcher::Status status = stitcher.stitch(images_, pano);
+        log("stiched");
+
+        cv_bridge::CvImage cv_img;
+        log("made cv_img");
+        cv_img.image = pano;
+        log("panao");
+        cv_img.encoding = "rgb8";
+        cv_img.header.stamp = ros::Time::now();
+        pub_stitched.publish(cv_img.toImageMsg());
+        // imwrite("pano.jpg", pano);
       }
       else
       {
@@ -180,7 +199,8 @@ void PanoApp::spin()
 void PanoApp::snap()
 {
   log("snap");
-  pub_action_snap.publish(empty_msg);
+  store_image = true;
+  ros::Duration(5.0).sleep();
 }
 
 void PanoApp::rotate()
@@ -284,7 +304,8 @@ bool PanoApp::takePanoServiceCb(turtlebot_msgs::TakePanorama::Request& request,
       continuous = false;
     }
     log("Starting panorama creation.");
-    startPanoAction();
+    // startPanoAction();
+    is_active = true;
     response.status = response.STARTED;
   }
   return true;
@@ -350,9 +371,10 @@ void PanoApp::startPanoAction()
 
 void PanoApp::stopPanoAction()
 {
-  pub_action_stop.publish(empty_msg);
+  // pub_action_stop.publish(empty_msg);
   is_active = false;
   log("Start of stitching triggered.");
+  ROS_ERROR("have %d elements", images_.size());
 }
 
 void PanoApp::doneCb(const actionlib::SimpleClientGoalState& state, const pano_ros::PanoCaptureResultConstPtr& result)
@@ -399,6 +421,36 @@ void PanoApp::stitchedImageCb(const sensor_msgs::ImageConstPtr& msg)
   std::cout << "is_bigendian: " << msg->is_bigendian << std::endl;
 
   log("Published new panorama picture.");
+}
+
+void PanoApp::cameraImageCb(const sensor_msgs::ImageConstPtr& msg)
+{
+
+  if (store_image)
+  {
+    std::cout << "encoding: " << msg->encoding << std::endl;
+    std::cout << "is_bigendian: " << msg->is_bigendian << std::endl;
+
+
+    cv_bridge::CvImagePtr cv_ptr;
+
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    }
+    catch (cv_bridge::Exception& e)
+    {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+
+    images_.push_back(cv_ptr->image);
+    store_image = false;
+  }
+  else {
+    //pub_stitched.publish(msg);
+  }
+
 }
 
 //*************

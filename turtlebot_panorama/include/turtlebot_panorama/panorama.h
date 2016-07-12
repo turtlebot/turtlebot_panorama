@@ -59,6 +59,10 @@
 
 #include "geometry.h"
 
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/stitching.hpp>
+
 namespace turtlebot_panorama
 {
 
@@ -100,6 +104,7 @@ private:
   ros::Subscriber sub_stop_pano;
   // Sends out the result of the stitched panorama picture
   image_transport::Publisher pub_stitched;
+  image_transport::Subscriber sub_camera;
 
   // worker functions
   // for extra logging out via a ROS topic
@@ -120,6 +125,9 @@ private:
   ros::Publisher pub_action_stop;
   // recevices the stitched image from pano_ros
   image_transport::Subscriber sub_stitched;
+
+  std::vector<cv::Mat> images_;
+
   /**
    * turns true, when the pano_ros action goal goes active
    */
@@ -147,6 +155,7 @@ private:
    */
   double default_rotation_velocity;
 
+  bool store_image;
   /**
    * Starts the creation of a panorama picture via a ROS service
    * @param request specify the details for panorama creation
@@ -224,6 +233,8 @@ private:
    * @param msg stiched image
    */
   void stitchedImageCb(const sensor_msgs::ImageConstPtr& msg);
+
+  void cameraImageCb(const sensor_msgs::ImageConstPtr& msg);
 };
 
 } //namespace turtlebot_panorama
