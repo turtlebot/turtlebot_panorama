@@ -84,8 +84,7 @@ public:
 				_gridCols), detectors_(gridCols * gridRows) {
 		int maxPerCell = maxTotalKeypoints / (gridRows * gridCols);
 		for (int i = 0; i < (int) (detectors_.size()); ++i) {
-			detectors_[i] = new cv::DynamicAdaptedFeatureDetector(new Adjuster(adjuster),maxPerCell
-					* 0.8, maxPerCell * 1.2,escape_iters_per_cell);
+			// detectors_[i] = new DynamicAdaptedFeatureDetector(new Adjuster(adjuster),maxPerCell * 0.8, maxPerCell * 1.2,escape_iters_per_cell);
 		}
 	}
 	virtual ~GriddedDynamicDetectorAdaptor() {

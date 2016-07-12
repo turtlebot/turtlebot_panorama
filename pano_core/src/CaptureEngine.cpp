@@ -9,7 +9,8 @@
 #include "pano_core/panoutils.h"
 
 #include <opencv2/highgui.hpp>
-#include <opencv2/legacy.hpp>
+// #include <opencv2/legacy.hpp>
+#include <opencv2/xfeatures2d.hpp>
 
 using namespace cv;
 using namespace std;
@@ -104,7 +105,7 @@ cv::Ptr<ImageAtom> CaptureEngine::onNewFrame(const cv::Mat& frame)
   else
   {
     cerr << "empty frame in capture engine! " << endl;
-    return 0;
+    return cv::Ptr<ImageAtom>();
   }
   FitterResult fit_result;
   std::list<AtomPair> result;

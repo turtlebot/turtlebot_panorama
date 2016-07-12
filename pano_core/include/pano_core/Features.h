@@ -10,6 +10,7 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/features2d.hpp>
+#include <opencv2/xfeatures2d.hpp>
 
 #include <pano_core/pano_interfaces.h>
 
@@ -41,7 +42,7 @@ public:
     return *this;
   }
 
-  void detect(const cv::FeatureDetector& detect, const cv::Mat& img);
+  void detect(cv::FeatureDetector& detect, const cv::Mat& img);
 
   cv::Ptr<cv::DescriptorMatcher> makeMatcher() const{
     return matcher_->clone(true);//matcher_copier_->clone(*matcher_);
@@ -54,7 +55,7 @@ public:
     }
 
   template<typename T>
-    void extract(const cv::DescriptorExtractor& extracter, const cv::Mat& img, const T& matcher)
+    void extract(cv::DescriptorExtractor& extracter, const cv::Mat& img, const T& matcher)
     {
       addMatcher(matcher);
       extract(extracter, img);
@@ -100,7 +101,7 @@ public:
 
 private:
 
-  void extract(const cv::DescriptorExtractor& extract, const cv::Mat& img);
+  void extract(cv::DescriptorExtractor& extract, const cv::Mat& img);
 
   void copyData(const Features& rhs)
   {
