@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(turtlebot_panorama)
 
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS cmake_modules roscpp actionlib std_msgs std_srvs nav_msgs sensor_msgs geometry_msgs turtlebot_msgs image_transport cv_bridge pano_ros)
+find_package(catkin REQUIRED COMPONENTS cmake_modules roscpp std_msgs std_srvs nav_msgs sensor_msgs geometry_msgs turtlebot_msgs image_transport cv_bridge)
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(cmake_modules REQUIRED)
 find_package(Eigen3 REQUIRED)

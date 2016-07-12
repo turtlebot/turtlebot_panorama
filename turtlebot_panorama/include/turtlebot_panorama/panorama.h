@@ -45,9 +45,6 @@
 #define PANORAMA_H_
 
 #include <ros/ros.h>
-#include <actionlib/client/simple_action_client.h>
-#include <actionlib/client/terminal_state.h>
-#include <pano_ros/PanoCaptureAction.h>
 #include <image_transport/image_transport.h>	
 #include <sensor_msgs/Image.h>		
 #include <std_msgs/Empty.h> 		
